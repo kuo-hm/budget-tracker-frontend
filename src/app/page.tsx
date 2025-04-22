@@ -1,4 +1,5 @@
 import KPICard from "../components/ui/card/kpi-card";
+import SpendingReport from "../components/ui/chart/line-chart";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         />
         <KPICard title="Goal" value="100.000 MAD" />
       </div>
+      <SpendingReport />
     </div>
   );
 }
