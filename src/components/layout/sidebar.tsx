@@ -7,7 +7,6 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { filterByType } from "higher-ed-morocco";
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -20,15 +19,13 @@ const Sidebar = ({ children, items }: SidebarProps) => {
   const pathname = usePathname();
   const isAuthPage = pathname.startsWith("/auth");
 
-  console.log(filterByType("engineering_school"));
-
   if (isAuthPage) {
     return children;
   }
   return (
     <div className="flex h-screen w-full flex-row">
       <aside
-        className={`flex h-full flex-col bg-white shadow-sm ${
+        className={`flex h-full flex-col bg-[#EFF4FF] shadow-sm ${
           expanded ? "w-[13vw] px-8" : "w-[5vw] px-4"
         } fixed gap-8 border-0 py-4 `}
       >

@@ -35,10 +35,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-gray-300 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Sidebar items={items}>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <div className="flex h-full w-full flex-col bg-[#F7FAFF] ">
+            {children}
+          </div>
         </Sidebar>
       </body>
     </html>

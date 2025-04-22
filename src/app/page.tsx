@@ -1,7 +1,22 @@
+import KPICard from "../components/ui/card/kpi-card";
+
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      TEXT
+    <div className="bg-[#F7FAFF] p-6 min-h-screen">
+      <div className="max-w-full mx-auto grid grid-cols-1 md:grid-cols-4 gap-4">
+        <KPICard title="Total Money" value="100.000 MAD" />
+        <KPICard
+          title="Money Spent this month"
+          value="50.000 MAD"
+          percentage={-15}
+        />
+        <KPICard
+          title="Money Saved this month"
+          value="25.000 MAD"
+          percentage={15}
+        />
+        <KPICard title="Goal" value="100.000 MAD" />
+      </div>
     </div>
   );
 }
