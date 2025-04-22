@@ -50,7 +50,7 @@ const SpendingReport = () => {
         <h2 className="text-2xl font-semibold text-gray-800">
           Spending Report
         </h2>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer">
           View Report
         </button>
       </div>
@@ -59,9 +59,9 @@ const SpendingReport = () => {
         {timeRanges.map((range) => (
           <button
             key={range}
-            className={`px-2 py-1 ${
+            className={`px-2 py-1 cursor-pointer ${
               timeRange === range
-                ? "text-gray-900 font-medium"
+                ? "text-gray-900 font-medium border-b-2 border-blue-500"
                 : "text-gray-400"
             }`}
             onClick={() => setTimeRange(range)}
