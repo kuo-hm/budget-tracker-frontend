@@ -25,34 +25,29 @@ const Table = ({
   prevPage,
   totalPages,
 }: Props) => {
-  // Pagination component
   const Pagination = () => {
-    // Create page number buttons
     const pageNumbers = [];
     const maxVisibleButtons = 5;
 
-    // Calculate visible page range
     let startPage = Math.max(
       1,
       currentPage - Math.floor(maxVisibleButtons / 2)
     );
     const endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
 
-    // Adjust start page if we're near the end
     if (endPage - startPage + 1 < maxVisibleButtons) {
       startPage = Math.max(1, endPage - maxVisibleButtons + 1);
     }
 
-    // Generate page buttons
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
         <button
           key={i}
           onClick={() => goToPage(i)}
-          className={`px-3 p-1 rounded mr-1  cursor-pointer ${
+          className={`px-3 py-1 rounded mx-1 cursor-pointer transition-colors ${
             currentPage === i
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300"
           }`}
         >
           {i}
@@ -65,10 +60,10 @@ const Table = ({
         <button
           onClick={prevPage}
           disabled={currentPage === 1}
-          className={`px-3 py-1 rounded mx-1 ${
+          className={`px-3 py-1 rounded mx-1 transition-colors ${
             currentPage === 1
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+              : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300"
           }`}
         >
           <svg
@@ -91,11 +86,11 @@ const Table = ({
           <>
             <button
               onClick={() => goToPage(1)}
-              className="px-3 py-1 mx-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200"
+              className="px-3 py-1 mx-1 rounded bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300 transition-colors"
             >
               1
             </button>
-            {startPage > 2 && <span className="mx-1">...</span>}
+            {startPage > 2 && <span className="mx-1 text-zinc-400">...</span>}
           </>
         )}
 
@@ -105,10 +100,10 @@ const Table = ({
         {/* Last page button with ellipsis if needed */}
         {endPage < totalPages && (
           <>
-            {endPage < totalPages - 1 && <span className="mx-1">...</span>}
+            {endPage < totalPages - 1 && <span className="mx-1 text-zinc-400">...</span>}
             <button
               onClick={() => goToPage(totalPages)}
-              className="px-3 py-1 mx-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200"
+              className="px-3 py-1 mx-1 rounded bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300 transition-colors"
             >
               {totalPages}
             </button>
@@ -118,10 +113,10 @@ const Table = ({
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages}
-          className={`px-3 py-1 rounded mx-1 ${
+          className={`px-3 py-1 rounded mx-1 transition-colors ${
             currentPage === totalPages
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+              : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300"
           }`}
         >
           <svg
@@ -143,13 +138,13 @@ const Table = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-100">
+    <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-medium text-gray-800">
+        <h2 className="text-2xl font-medium text-zinc-100">
           Transaction History
         </h2>
         <div className="flex gap-2">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2  cursor-pointer">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-blue-600 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -168,7 +163,7 @@ const Table = ({
             </svg>
             View Report
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2  cursor-pointer">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-blue-600 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -190,7 +185,7 @@ const Table = ({
       </div>
 
       <div className="w-full">
-        <div className="grid grid-cols-5 text-sm text-gray-500 border-b pb-2 mb-2">
+        <div className="grid grid-cols-5 text-sm text-zinc-400 border-b border-zinc-800 pb-2 mb-2">
           <div className="col-span-1">Transaction</div>
           <div className="col-span-1">ID</div>
           <div className="col-span-1">Amount</div>
@@ -198,27 +193,35 @@ const Table = ({
           <div className="col-span-1">Date</div>
         </div>
 
-        {data.map((transaction, index) => (
+        {data.map((item, index) => (
           <div
-            key={transaction.id}
-            className={`grid grid-cols-5 items-center py-4 ${
-              index !== data.length - 1 ? "border-b border-gray-100" : ""
-            }`}
+            key={item.id}
+            className="grid grid-cols-5 py-3 text-sm border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors"
           >
-            <div className="col-span-1 flex items-center gap-3">
-              {transaction.logo}
-              <span className="font-medium">{transaction.name}</span>
+            <div className="col-span-1 flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
+                {item.logo}
+              </div>
+              <span className="text-zinc-100">{item.name}</span>
             </div>
-            <div className="col-span-1 text-gray-400">{transaction.id}</div>
-            <div
-              className={`col-span-1 font-medium ${
-                transaction.isNegative ? "text-red-500" : "text-green-500"
-              }`}
-            >
-              {transaction.amount}
+            <div className="col-span-1 flex items-center text-zinc-400">
+              {item.id}
             </div>
-            <div className="col-span-1 text-gray-500">{transaction.date}</div>
-            <div className="col-span-1 text-gray-500">{transaction.date}</div>
+            <div className="col-span-1 flex items-center">
+              <span
+                className={`${
+                  item.isNegative ? "text-red-400" : "text-green-400"
+                }`}
+              >
+                {item.amount}
+              </span>
+            </div>
+            <div className="col-span-1 flex items-center text-zinc-400">
+              {item.date}
+            </div>
+            <div className="col-span-1 flex items-center text-zinc-400">
+              {item.date}
+            </div>
           </div>
         ))}
       </div>

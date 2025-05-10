@@ -14,7 +14,6 @@ import {
 const SpendingReport = () => {
   const [timeRange, setTimeRange] = useState("12 Months");
 
-  // Sample data that mimics the chart in the design
   const data = [
     { month: "Jan", income: 25, spending: 20 },
     { month: "Feb", income: 28, spending: 24 },
@@ -32,25 +31,14 @@ const SpendingReport = () => {
 
   const timeRanges = ["12 Months", "3 months", "30 days", "7 days", "24 Hours"];
 
-  //   const CustomTooltip = ({ active, payload }) => {
-  //     if (active && payload && payload.length) {
-  //       return (
-  //         <div className="bg-white p-2 border border-gray-200 rounded-md shadow-sm">
-  //           <p className="text-gray-400 text-sm">Income</p>
-  //           <p className="font-medium">Rp 25.000</p>
-  //         </div>
-  //       );
-  //     }
-  //     return null;
-  //   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm">
+    <div className="bg-zinc-900 p-6 rounded-xl">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <h2 className="text-2xl font-semibold text-zinc-100">
           Spending Report
         </h2>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600 transition-colors">
           View Report
         </button>
       </div>
@@ -61,8 +49,8 @@ const SpendingReport = () => {
             key={range}
             className={`px-2 py-1 cursor-pointer ${
               timeRange === range
-                ? "text-gray-900 font-medium border-b-2 border-blue-500"
-                : "text-gray-400"
+                ? "text-zinc-100 font-medium border-b-2 border-blue-500"
+                : "text-zinc-400 hover:text-zinc-300"
             }`}
             onClick={() => setTimeRange(range)}
           >
@@ -80,36 +68,45 @@ const SpendingReport = () => {
             <CartesianGrid
               vertical={false}
               strokeDasharray="3 3"
-              opacity={0.2}
+              stroke="#27272a"
+              opacity={0.5}
             />
             <XAxis
               dataKey="month"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#888" }}
+              tick={{ fill: "#a1a1aa" }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#888" }}
+              tick={{ fill: "#a1a1aa" }}
               domain={[0, 100]}
             />
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#18181b",
+                border: "1px solid #27272a",
+                borderRadius: "0.5rem",
+                color: "#f4f4f5"
+              }}
+              labelStyle={{ color: "#a1a1aa" }}
+            />
             <Line
               type="monotone"
               dataKey="income"
-              stroke="#2563eb"
+              stroke="#3b82f6"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 6 }}
+              activeDot={{ r: 6, fill: "#3b82f6", stroke: "#18181b" }}
             />
             <Line
               type="monotone"
               dataKey="spending"
-              stroke="#fbbf24"
+              stroke="#f59e0b"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 6 }}
+              activeDot={{ r: 6, fill: "#f59e0b", stroke: "#18181b" }}
             />
           </LineChart>
         </ResponsiveContainer>

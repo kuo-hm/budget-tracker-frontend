@@ -3,6 +3,7 @@ import { useState } from "react";
 import KPICard from "../components/ui/card/kpi-card";
 import SpendingReport from "../components/ui/chart/line-chart";
 import Table from "../components/ui/table/table";
+import { motion } from "framer-motion";
 
 const allTransactions = [
   {
@@ -54,6 +55,7 @@ const allTransactions = [
     date: "11 Jan 10:15am",
   },
 ];
+
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -68,9 +70,15 @@ export default function Home() {
   const goToPage = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
   return (
-    <div className="bg-[#F7FAFF] p-6 min-h-screen">
-      <div className="max-w-full mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+    <div className="bg-zinc-950 p-6 min-h-screen">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-full mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-5"
+      >
         <KPICard title="Total Money" value="100.000 MAD" />
         <KPICard
           title="Money Spent this month"
@@ -83,11 +91,23 @@ export default function Home() {
           percentage={15}
         />
         <KPICard title="Goal" value="100.000 MAD" />
-      </div>
-      <div className="mb-5">
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="mb-5 bg-zinc-900 rounded-2xl shadow-xl p-6 border border-zinc-800"
+      >
         <SpendingReport />
-      </div>
-      <div className="mb-5">
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="mb-5 bg-zinc-900 rounded-2xl shadow-xl p-6 border border-zinc-800"
+      >
         <Table
           data={allTransactions}
           totalPages={4}
@@ -96,7 +116,7 @@ export default function Home() {
           prevPage={prevPage}
           goToPage={goToPage}
         />
-      </div>
+      </motion.div>
     </div>
   );
 }
