@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./assets/css/globals.css";
-import Sidebar from "../components/layout/sidebar";
-import { AuthCheck } from "@/components/auth/auth-check";
-import QueryProvider from "@/providers/query-provider";
+import { Providers } from "../providers";
+import { AuthProvider } from "@/providers/auth-provider";
+import Sidebar from "@/components/layout/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,18 +22,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950`}
       >
-        <QueryProvider>
-          <AuthCheck />
-          <Sidebar>{children}</Sidebar>
-        </QueryProvider>
+        <Providers>
+          <AuthProvider>
+            <Sidebar>{children}</Sidebar>
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
