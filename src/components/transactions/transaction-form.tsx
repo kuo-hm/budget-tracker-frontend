@@ -23,6 +23,7 @@ export function TransactionForm({
   isSubmitting,
 }: TransactionFormProps) {
   const [formData, setFormData] = useState<TransactionCreatePayload>({
+    name: "",
     description: "",
     amount: 0,
     type: "EXPENSE",
@@ -30,11 +31,16 @@ export function TransactionForm({
     categoryId: 0,
   });
 
-  const { categories } = useCategories(formData.type);
+  const {
+    categories,
+    isLoading: isLoadingCategories,
+    error: categoriesError,
+  } = useCategories(formData.type);
 
   useEffect(() => {
     if (transaction) {
       setFormData({
+        name: transaction.name,
         description: transaction.description,
         amount: transaction.amount,
         type: transaction.type,
@@ -76,7 +82,11 @@ export function TransactionForm({
               type="text"
               value={formData.description}
               onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
+                setFormData({
+                  ...formData,
+                  description: e.target.value,
+                  name: e.target.value,
+                })
               }
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -176,14 +186,28 @@ export function TransactionForm({
               }
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoadingCategories}
             >
               <option value="">Select Category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+              {isLoadingCategories ? (
+                <option value="" disabled>
+                  Loading categories...
                 </option>
-              ))}
+              ) : categoriesError ? (
+                <option value="" disabled>
+                  Failed to load categories
+                </option>
+              ) : categories.length === 0 ? (
+                <option value="" disabled>
+                  No categories available
+                </option>
+              ) : (
+                categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -199,7 +223,12 @@ export function TransactionForm({
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting ||
+                isLoadingCategories ||
+                Boolean(categoriesError) ||
+                categories.length === 0
+              }
             >
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
