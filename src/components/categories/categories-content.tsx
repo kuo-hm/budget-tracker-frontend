@@ -31,7 +31,6 @@ export default function CategoriesContent() {
   };
 
   const handleFormSuccess = () => {
-    
     queryClient.invalidateQueries({ queryKey: ["categories"] });
     handleFormClose();
   };

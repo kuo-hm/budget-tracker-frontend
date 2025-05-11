@@ -91,7 +91,7 @@ export default function Sidebar({ children }: SidebarProps) {
         </div>
       </div>
 
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="flex-1 overflow-auto  p-6 min-h-screen">{children}</main>
     </div>
   );
 }
