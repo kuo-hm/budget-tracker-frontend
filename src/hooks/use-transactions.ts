@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionsApi } from "@/api/transactions";
-import type { Transaction, TransactionCreatePayload, TransactionFilters } from "@/lib/types/transaction";
+import type { TransactionCreatePayload, TransactionFilters } from "@/lib/types/transaction";
 
 export function useTransactions(filters: TransactionFilters) {
   const queryClient = useQueryClient();
