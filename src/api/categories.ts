@@ -32,6 +32,7 @@ export interface CategoriesResponse {
   };
 }
 
+
 export const categoriesApi = {
   getAll: async (params?: GetCategoriesParams): Promise<CategoriesResponse> => {
     const { data } = await api.get("/categories", { params });
@@ -51,4 +52,5 @@ export const categoriesApi = {
   delete: async (id: string): Promise<void> => {
     await api.delete(`/categories/${id}`);
   },
+
 }; 

@@ -1,0 +1,16 @@
+version: '3.8'
+
+networks:
+  budget-manager:
+    external: true
+
+services:
+  frontend:
+    build: .
+    container_name: budget-tracker-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - budget-manager
+    environment:
+      - NODE_ENV=production 

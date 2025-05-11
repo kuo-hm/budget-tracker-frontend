@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Edit2, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Category, CategoryType } from "@/app/categories/page";
-import { categoriesApi, type GetCategoriesParams } from "@/services/api/categories";
+import { categoriesApi, type GetCategoriesParams } from "@/api/categories";
 
 interface CategoryListProps {
   onEdit: (category: Category) => void;
@@ -55,7 +55,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
 
   useEffect(() => {
     fetchCategories();
-  }, [currentPage, sortBy, orderBy, selectedType]);
+  }, [currentPage, sortBy, orderBy, selectedType, fetchCategories]);
 
   const handleDelete = async (id: string) => {
     try {

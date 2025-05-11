@@ -50,8 +50,3 @@ if (typeof window !== "undefined") {
   );
 }
 
-// Export both instances
-export default {
-  auth: authApi,
-  api: api,
-};

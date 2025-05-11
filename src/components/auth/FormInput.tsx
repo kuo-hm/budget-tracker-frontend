@@ -1,5 +1,4 @@
 import React from "react";
-import { LucideIcon } from "lucide-react";
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode;

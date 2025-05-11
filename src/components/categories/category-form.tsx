@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import type { Category, CategoryType } from "@/app/categories/page";
-import { categoriesApi } from "@/services/api/categories";
+import { categoriesApi } from "@/api/categories";
 
 interface CategoryFormProps {
   category?: Category | null;

@@ -193,7 +193,7 @@ const Table = ({
           <div className="col-span-1">Date</div>
         </div>
 
-        {data.map((item, index) => (
+        {data.map((item) => (
           <div
             key={item.id}
             className="grid grid-cols-5 py-3 text-sm border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors"

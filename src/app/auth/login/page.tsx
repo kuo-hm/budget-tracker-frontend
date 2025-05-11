@@ -6,7 +6,7 @@ import { authService } from "@/api/auth";
 import { motion } from "framer-motion";
 import { Mail, Lock } from "lucide-react";
 import { FormInput } from "@/components/auth/FormInput";
-import { loginSchema, type LoginInput } from "@/lib/validators/auth";
+import { loginSchema } from "@/lib/validators/auth";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
@@ -151,7 +151,7 @@ const LoginPage = () => {
             className="text-center"
           >
             <p className="text-zinc-400">
-              Don't have an account?{" "}
+              {"Don't have an account?"}{" "}
               <a href="/auth/register" className="text-zinc-100 hover:underline">
                 Sign up
               </a>

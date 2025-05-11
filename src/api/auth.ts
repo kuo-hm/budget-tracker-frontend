@@ -3,7 +3,6 @@
 import { LoginInput, RegisterInput } from "@/lib/validators/auth";
 import { authApi as axiosAuthApi } from "./index";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface LoginDto {
   email: string;
@@ -37,11 +36,10 @@ export const authService = {
     try {
       const { data } = await axiosAuthApi.post("/auth/login", credentials);
       return { data };
-    } catch (error: any) {
+    } catch (error) {
       console.error("Login error:", error);
       return {
-        error: "Login failed",
-        errors: error.response?.data || {},
+        error: "Login failed"
       };
     }
   },

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, User } from "lucide-react";
 import { FormInput } from "@/components/auth/FormInput";
-import { registerSchema, type RegisterInput } from "@/lib/validators/auth";
+import { registerSchema } from "@/lib/validators/auth";
 import { authService } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
