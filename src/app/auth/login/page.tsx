@@ -40,10 +40,10 @@ const LoginPage = () => {
         return;
       }
 
-      // Store the token in localStorage
+      
       if (response.data?.token) {
         localStorage.setItem("Authorization", response.data.token);
-        router.push("/"); // Redirect to main page
+        router.push("/"); 
       }
     } catch (err) {
       if (err instanceof z.ZodError) {

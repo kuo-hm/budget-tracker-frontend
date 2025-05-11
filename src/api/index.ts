@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Base axios instance for authentication endpoints
+
 export const authApi = axios.create({
   baseURL: API_URL,
   headers: {
@@ -11,7 +11,7 @@ export const authApi = axios.create({
   },
 });
 
-// Axios instance for authenticated API calls
+
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -20,9 +20,9 @@ export const api = axios.create({
   },
 });
 
-// Only add interceptors on the client side
+
 if (typeof window !== "undefined") {
-  // Add a request interceptor for authenticated API calls
+  
   api.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem("Authorization");
@@ -37,7 +37,7 @@ if (typeof window !== "undefined") {
     }
   );
 
-  // Add a response interceptor for authenticated API calls
+  
   api.interceptors.response.use(
     (response) => response,
     (error) => {

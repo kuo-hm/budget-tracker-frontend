@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import type { Category, CategoryType } from "@/app/categories/page";
 import { categoriesApi } from "@/api/categories";
+import { useMutation } from "@tanstack/react-query";
 
 interface CategoryFormProps {
   category?: Category | null;
@@ -17,8 +18,6 @@ const CategoryForm = ({ category, onClose, onSuccess }: CategoryFormProps) => {
     description: "",
     type: "INCOME" as CategoryType,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (category) {
@@ -30,29 +29,35 @@ const CategoryForm = ({ category, onClose, onSuccess }: CategoryFormProps) => {
     }
   }, [category]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      if (category) {
-        await categoriesApi.update({
-          id: category.id,
-          ...formData,
-        });
-      } else {
-        await categoriesApi.create(formData);
-      }
+  const createMutation = useMutation({
+    mutationFn: (data: typeof formData) => categoriesApi.create(data),
+    onSuccess: () => {
       onSuccess?.();
       onClose();
-    } catch (err) {
-      setError("Failed to save category");
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (data: typeof formData & { id: string }) =>
+      categoriesApi.update(data),
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (category) {
+      updateMutation.mutate({ id: category.id, ...formData });
+    } else {
+      createMutation.mutate(formData);
     }
   };
+
+  const isSubmitting = createMutation.isPending || updateMutation.isPending;
+  const error = createMutation.error || updateMutation.error;
 
   const categoryTypes: CategoryType[] = [
     "INCOME",
@@ -80,7 +85,7 @@ const CategoryForm = ({ category, onClose, onSuccess }: CategoryFormProps) => {
 
         {error && (
           <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-400 text-sm">Failed to save category</p>
           </div>
         )}
 
@@ -136,7 +141,10 @@ const CategoryForm = ({ category, onClose, onSuccess }: CategoryFormProps) => {
               id="type"
               value={formData.type}
               onChange={(e) =>
-                setFormData({ ...formData, type: e.target.value as CategoryType })
+                setFormData({
+                  ...formData,
+                  type: e.target.value as CategoryType,
+                })
               }
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -169,8 +177,10 @@ const CategoryForm = ({ category, onClose, onSuccess }: CategoryFormProps) => {
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                   {category ? "Updating..." : "Creating..."}
                 </div>
+              ) : category ? (
+                "Update"
               ) : (
-                category ? "Update" : "Create"
+                "Create"
               )}
             </button>
           </div>
@@ -180,4 +190,4 @@ const CategoryForm = ({ category, onClose, onSuccess }: CategoryFormProps) => {
   );
 };
 
-export default CategoryForm; 
+export default CategoryForm;

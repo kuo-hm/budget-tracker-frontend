@@ -6,11 +6,14 @@ import { Plus } from "lucide-react";
 import CategoryList from "@/components/categories/category-list";
 import CategoryForm from "@/components/categories/category-form";
 import { Category } from "@/app/categories/page";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CategoriesContent() {
+  const queryClient = useQueryClient();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [key, setKey] = useState(0); // Used to force CategoryList to refresh
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
   const handleAddClick = () => {
     setSelectedCategory(null);
@@ -28,7 +31,9 @@ export default function CategoriesContent() {
   };
 
   const handleFormSuccess = () => {
-    setKey((prev) => prev + 1); // Force CategoryList to refresh
+    
+    queryClient.invalidateQueries({ queryKey: ["categories"] });
+    handleFormClose();
   };
 
   return (
@@ -50,10 +55,7 @@ export default function CategoriesContent() {
         transition={{ duration: 0.5 }}
         className="bg-zinc-900 rounded-xl border border-zinc-800 p-6"
       >
-        <CategoryList
-          key={key}
-          onEdit={handleEditClick}
-        />
+        <CategoryList onEdit={handleEditClick} />
       </motion.div>
 
       {isFormOpen && (
@@ -65,4 +67,4 @@ export default function CategoriesContent() {
       )}
     </div>
   );
-} 
+}

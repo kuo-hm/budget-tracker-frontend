@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Edit2, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Category, CategoryType } from "@/app/categories/page";
 import { categoriesApi, type GetCategoriesParams } from "@/api/categories";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CategoryListProps {
   onEdit: (category: Category) => void;
@@ -12,21 +13,28 @@ interface CategoryListProps {
 const ITEMS_PER_PAGE = 10;
 
 const CategoryList = ({ onEdit }: CategoryListProps) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [selectedType, setSelectedType] = useState<CategoryType | "">("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [sortBy, setSortBy] = useState<string>("name");
-  const [orderBy, setOrderBy] = useState<"asc" | "desc">("asc");
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const fetchCategories = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
+  
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const sortBy = searchParams.get("sortBy") || "name";
+  const orderBy = (searchParams.get("orderBy") as "asc" | "desc") || "asc";
+  const selectedType = (searchParams.get("type") as CategoryType) || "";
+  const searchKeyword = searchParams.get("keyword") || "";
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [
+      "categories",
+      currentPage,
+      sortBy,
+      orderBy,
+      selectedType,
+      searchKeyword,
+    ],
+    queryFn: async () => {
       const params: GetCategoriesParams = {
         page: currentPage,
         limit: ITEMS_PER_PAGE,
@@ -42,43 +50,55 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
         params.type = selectedType;
       }
 
-      const response = await categoriesApi.getAll(params);
-      setCategories(response.list);
-      setTotalPages(response.metadata.totalPages);
-    } catch (err) {
-      setError("Failed to load categories");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return categoriesApi.getAll(params);
+    },
+  });
 
-  useEffect(() => {
-    fetchCategories();
-  }, [currentPage, sortBy, orderBy, selectedType, fetchCategories]);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => categoriesApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
 
   const handleDelete = async (id: string) => {
     try {
-      await categoriesApi.delete(id);
-      fetchCategories();
+      await deleteMutation.mutateAsync(id);
     } catch (err) {
       console.error("Failed to delete category:", err);
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const updateSearchParams = (updates: Record<string, string>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setCurrentPage(1);
-    fetchCategories();
+    const formData = new FormData(e.currentTarget);
+    const keyword = formData.get("keyword") as string;
+    updateSearchParams({ keyword, page: "1" });
   };
 
   const handleSort = (field: string) => {
-    if (sortBy === field) {
-      setOrderBy(orderBy === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(field);
-      setOrderBy("asc");
-    }
+    const newOrderBy = sortBy === field && orderBy === "asc" ? "desc" : "asc";
+    updateSearchParams({ sortBy: field, orderBy: newOrderBy });
+  };
+
+  const handleTypeChange = (type: string) => {
+    updateSearchParams({ type, page: "1" });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    updateSearchParams({ page: newPage.toString() });
   };
 
   const getTypeColor = (type: CategoryType) => {
@@ -120,9 +140,11 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-400">{error}</p>
+        <p className="text-red-400">Failed to load categories</p>
         <button
-          onClick={fetchCategories}
+          onClick={() =>
+            queryClient.invalidateQueries({ queryKey: ["categories"] })
+          }
           className="mt-4 text-blue-400 hover:text-blue-300"
         >
           Try again
@@ -131,6 +153,9 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
     );
   }
 
+  const categories = data?.list ?? [];
+  const totalPages = data?.metadata.totalPages ?? 1;
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -138,8 +163,8 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
           <div className="relative">
             <input
               type="text"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
+              name="keyword"
+              defaultValue={searchKeyword}
               placeholder="Search categories..."
               className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-4 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -149,10 +174,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
 
         <select
           value={selectedType}
-          onChange={(e) => {
-            setSelectedType(e.target.value as CategoryType | "");
-            setCurrentPage(1);
-          }}
+          onChange={(e) => handleTypeChange(e.target.value)}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Types</option>
@@ -197,7 +219,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
               <div className={getTypeColor(category.type)}>{category.type}</div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => onEdit(category)}
+                  onClick={() => onEdit(category as Category)}
                   className="p-1 text-zinc-400 hover:text-zinc-100 transition-colors"
                 >
                   <Edit2 size={16} />
@@ -214,7 +236,7 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
 
           <div className="flex justify-between items-center pt-4">
             <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
               disabled={currentPage === 1}
               className="flex items-center gap-1 text-zinc-400 hover:text-zinc-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -225,7 +247,9 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                handlePageChange(Math.min(currentPage + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               className="flex items-center gap-1 text-zinc-400 hover:text-zinc-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -239,4 +263,4 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
   );
 };
 
-export default CategoryList; 
+export default CategoryList;

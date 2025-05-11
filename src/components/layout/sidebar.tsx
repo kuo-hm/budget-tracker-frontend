@@ -1,7 +1,7 @@
 "use client";
 
-import { HorizontalLogo } from "@/assets/icons/svg/horizontal-logo";
-import { 
+import { HorizontalLogo } from "@/app/assets/icons/svg/horizontal-logo";
+import {
   HomeIcon,
   Wallet,
   BarChart3,
@@ -11,7 +11,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Tag
+  Tag,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -54,10 +54,10 @@ const Sidebar = ({ children }: SidebarProps) => {
         {isOpen && (
           <motion.aside
             initial={{ x: -300, opacity: 0 }}
-            animate={{ 
-              x: 0, 
+            animate={{
+              x: 0,
               opacity: 1,
-              width: isExpanded ? "280px" : "80px"
+              width: isExpanded ? "280px" : "80px",
             }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ type: "spring", damping: 20 }}
@@ -67,16 +67,16 @@ const Sidebar = ({ children }: SidebarProps) => {
               <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-800">
                 <div className="flex-1 overflow-hidden">
                   <motion.div
-                    animate={{ 
+                    animate={{
                       width: isExpanded ? "auto" : 0,
                       opacity: isExpanded ? 1 : 0,
-                      display: isExpanded ? "block" : "none"
+                      display: isExpanded ? "block" : "none",
                     }}
-                    transition={{ 
+                    transition={{
                       type: "spring",
                       damping: 25,
                       stiffness: 200,
-                      duration: 0.3
+                      duration: 0.3,
                     }}
                     className="whitespace-nowrap"
                   >
@@ -89,7 +89,11 @@ const Sidebar = ({ children }: SidebarProps) => {
                   onClick={() => setIsExpanded(!isExpanded)}
                   className="hidden lg:flex p-2 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
                 >
-                  {isExpanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+                  {isExpanded ? (
+                    <ChevronLeft size={20} />
+                  ) : (
+                    <ChevronRight size={20} />
+                  )}
                 </button>
               </div>
 
@@ -110,17 +114,17 @@ const Sidebar = ({ children }: SidebarProps) => {
                     >
                       <Icon className="w-5 h-5" />
                       <motion.div
-                        animate={{ 
+                        animate={{
                           width: isExpanded ? "auto" : 0,
                           opacity: isExpanded ? 1 : 0,
                           marginLeft: isExpanded ? 12 : 0,
-                          display: isExpanded ? "block" : "none"
+                          display: isExpanded ? "block" : "none",
                         }}
-                        transition={{ 
+                        transition={{
                           type: "spring",
                           damping: 25,
                           stiffness: 200,
-                          duration: 0.3
+                          duration: 0.3,
                         }}
                         className="overflow-hidden whitespace-nowrap"
                       >
@@ -130,11 +134,11 @@ const Sidebar = ({ children }: SidebarProps) => {
                         <motion.div
                           layoutId="activeTab"
                           className="absolute left-0 w-1 h-8 bg-blue-500 rounded-r-full"
-                          transition={{ 
+                          transition={{
                             type: "spring",
                             damping: 25,
                             stiffness: 200,
-                            duration: 0.3
+                            duration: 0.3,
                           }}
                         />
                       )}
@@ -150,7 +154,7 @@ const Sidebar = ({ children }: SidebarProps) => {
                       await authService.logout();
                     } catch (error) {
                       console.error("Logout failed:", error);
-                      // Still redirect to login page even if the API call fails
+                      
                       window.location.href = "/auth/login";
                     }
                   }}
@@ -158,17 +162,17 @@ const Sidebar = ({ children }: SidebarProps) => {
                 >
                   <LogOut className="w-5 h-5" />
                   <motion.div
-                    animate={{ 
+                    animate={{
                       width: isExpanded ? "auto" : 0,
                       opacity: isExpanded ? 1 : 0,
                       marginLeft: isExpanded ? 12 : 0,
-                      display: isExpanded ? "block" : "none"
+                      display: isExpanded ? "block" : "none",
                     }}
-                    transition={{ 
+                    transition={{
                       type: "spring",
                       damping: 25,
                       stiffness: 200,
-                      duration: 0.3
+                      duration: 0.3,
                     }}
                     className="overflow-hidden whitespace-nowrap"
                   >
@@ -194,9 +198,7 @@ const Sidebar = ({ children }: SidebarProps) => {
       </AnimatePresence>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-4 py-8">
-          {children}
-        </div>
+        <div className="container mx-auto px-4 py-8">{children}</div>
       </main>
     </div>
   );

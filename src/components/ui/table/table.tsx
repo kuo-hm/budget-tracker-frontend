@@ -17,6 +17,7 @@ interface Props {
   prevPage: () => void;
   goToPage: (pageNumber: number) => void;
 }
+
 const Table = ({
   currentPage,
   data,
@@ -81,7 +82,6 @@ const Table = ({
           </svg>
         </button>
 
-        {/* First page button with ellipsis if needed */}
         {startPage > 1 && (
           <>
             <button
@@ -94,13 +94,13 @@ const Table = ({
           </>
         )}
 
-        {/* Page numbers */}
         {pageNumbers}
 
-        {/* Last page button with ellipsis if needed */}
         {endPage < totalPages && (
           <>
-            {endPage < totalPages - 1 && <span className="mx-1 text-zinc-400">...</span>}
+            {endPage < totalPages - 1 && (
+              <span className="mx-1 text-zinc-400">...</span>
+            )}
             <button
               onClick={() => goToPage(totalPages)}
               className="px-3 py-1 mx-1 rounded bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300 transition-colors"
@@ -161,7 +161,7 @@ const Table = ({
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            View Report
+            Calendar View
           </button>
           <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-blue-600 transition-colors">
             <svg
@@ -179,24 +179,23 @@ const Table = ({
               <line x1="4" y1="12" x2="20" y2="12"></line>
               <line x1="4" y1="18" x2="20" y2="18"></line>
             </svg>
-            View Report
+            List View
           </button>
         </div>
       </div>
 
       <div className="w-full">
-        <div className="grid grid-cols-5 text-sm text-zinc-400 border-b border-zinc-800 pb-2 mb-2">
+        <div className="grid grid-cols-4 text-sm text-zinc-400 border-b border-zinc-800 pb-2 mb-2">
           <div className="col-span-1">Transaction</div>
           <div className="col-span-1">ID</div>
           <div className="col-span-1">Amount</div>
-          <div className="col-span-1">Date</div>
           <div className="col-span-1">Date</div>
         </div>
 
         {data.map((item) => (
           <div
             key={item.id}
-            className="grid grid-cols-5 py-3 text-sm border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors"
+            className="grid grid-cols-4 py-3 text-sm border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors"
           >
             <div className="col-span-1 flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
@@ -219,14 +218,10 @@ const Table = ({
             <div className="col-span-1 flex items-center text-zinc-400">
               {item.date}
             </div>
-            <div className="col-span-1 flex items-center text-zinc-400">
-              {item.date}
-            </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination */}
       <Pagination />
     </div>
   );

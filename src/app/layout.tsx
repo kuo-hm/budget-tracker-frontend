@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../assets/css/globals.css";
+import "./assets/css/globals.css";
 import Sidebar from "../components/layout/sidebar";
-
 import { AuthCheck } from "@/components/auth/auth-check";
+import QueryProvider from "@/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950`}
       >
-        <AuthCheck />
-        <Sidebar >
-          {children}
-        </Sidebar>
+        <QueryProvider>
+          <AuthCheck />
+          <Sidebar>{children}</Sidebar>
+        </QueryProvider>
       </body>
     </html>
   );
