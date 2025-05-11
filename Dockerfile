@@ -1,15 +1,16 @@
+
 # Install dependencies only when needed
 FROM node:20-alpine AS deps
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn 
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN yarn build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM node:20-alpine AS runner
@@ -30,5 +31,4 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["yarn", "start"] 
-
+CMD ["npm", "start"]
