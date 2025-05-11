@@ -5,7 +5,11 @@ import { LogOut, User, Settings, ChevronDown } from "lucide-react";
 import { useAuthContext } from "@/providers/auth-provider";
 import { useRouter } from "next/navigation";
 
-export function UserDropdown() {
+interface UserDropdownProps {
+  isCollapsed: boolean;
+}
+
+export function UserDropdown({ isCollapsed }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { user, logout } = useAuthContext();
@@ -40,26 +44,35 @@ export function UserDropdown() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 w-full p-2 rounded-lg hover:bg-zinc-800 transition-colors"
+        title={isCollapsed ? `${user?.firstName} ${user?.lastName}` : ""}
       >
         <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-100">
           {user?.firstName?.charAt(0).toUpperCase()}
         </div>
-        <div className="flex-1 text-left">
-          <div className="text-sm font-medium text-zinc-100">
-            {user?.firstName} {user?.lastName}
-          </div>
-          <div className="text-xs text-zinc-400">{user?.email}</div>
-        </div>
-        <ChevronDown
-          size={16}
-          className={`text-zinc-400 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
+        {!isCollapsed && (
+          <>
+            <div className="flex-1 text-left">
+              <div className="text-sm font-medium text-zinc-100">
+                {user?.firstName} {user?.lastName}
+              </div>
+              <div className="text-xs text-zinc-400">{user?.email}</div>
+            </div>
+            <ChevronDown
+              size={16}
+              className={`text-zinc-400 transition-transform ${
+                isOpen ? "rotate-180" : ""
+              }`}
+            />
+          </>
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 mb-2 w-full bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg overflow-hidden">
+        <div
+          className={`absolute ${
+            isCollapsed ? "left-0" : "bottom-full left-0 mb-2"
+          } w-full bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg overflow-hidden`}
+        >
           <div className="p-2 border-b border-zinc-800">
             <div className="text-sm font-medium text-zinc-100">
               {user?.firstName} {user?.lastName}

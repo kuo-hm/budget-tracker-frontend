@@ -8,9 +8,11 @@ import { Mail, Lock } from "lucide-react";
 import { FormInput } from "@/components/auth/FormInput";
 import { loginSchema } from "@/lib/validators/auth";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LoginPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isClient, setIsClient] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,10 +42,11 @@ const LoginPage = () => {
         return;
       }
 
-      
       if (response.data?.token) {
         localStorage.setItem("Authorization", response.data.token);
-        router.push("/"); 
+        // Invalidate and refetch user data
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
+        router.push("/");
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -80,7 +83,9 @@ const LoginPage = () => {
             transition={{ delay: 0.2 }}
             className="text-center"
           >
-            <h2 className="text-4xl font-bold text-zinc-100 mb-2">Welcome Back</h2>
+            <h2 className="text-4xl font-bold text-zinc-100 mb-2">
+              Welcome Back
+            </h2>
             <p className="text-zinc-400">Please login to your account</p>
           </motion.div>
 
@@ -152,7 +157,10 @@ const LoginPage = () => {
           >
             <p className="text-zinc-400">
               {"Don't have an account?"}{" "}
-              <a href="/auth/register" className="text-zinc-100 hover:underline">
+              <a
+                href="/auth/register"
+                className="text-zinc-100 hover:underline"
+              >
                 Sign up
               </a>
             </p>
