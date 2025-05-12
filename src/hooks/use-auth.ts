@@ -3,6 +3,7 @@ import { api } from "@/api";
 import { useRouter } from "next/navigation";
 import type { User } from "@/lib/types/user";
 import { AxiosError } from "axios";
+import Cookies from 'js-cookie';
 
 export function useAuth() {
   const router = useRouter();
@@ -14,20 +15,20 @@ export function useAuth() {
         const { data } = await api.get<User>("/user/me");
         return data;
       } catch (error) {
-        
         if (error instanceof AxiosError && (error.response?.status === 401 || error.response?.status === 403)) {
-          localStorage.removeItem("Authorization");
+          Cookies.remove("Authorization");
           router.push("/auth/login");
         }
         throw error;
       }
     },
-    retry: false, 
-    staleTime: 1000 * 60 * 5, 
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+    enabled: !!Cookies.get("Authorization"),
   });
 
   const logout = () => {
-    localStorage.removeItem("Authorization");
+    Cookies.remove("Authorization");
     router.push("/auth/login");
   };
 

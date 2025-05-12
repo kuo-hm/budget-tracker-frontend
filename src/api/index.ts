@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,10 +26,13 @@ if (typeof window !== "undefined") {
   
   api.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem("Authorization");
-      console.log("token", token);
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      try {
+        const token = Cookies.get("Authorization");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      } catch (error) {
+        console.warn("Failed to access cookie:", error);
       }
       return config;
     },
@@ -42,8 +46,12 @@ if (typeof window !== "undefined") {
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
-        localStorage.removeItem("Authorization");
-        window.location.href = "/auth/login";
+        try {
+          Cookies.remove("Authorization");
+          window.location.href = "/auth/login";
+        } catch (error) {
+          console.warn("Failed to remove cookie:", error);
+        }
       }
       return Promise.reject(error);
     }
