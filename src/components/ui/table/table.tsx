@@ -3,7 +3,7 @@
 interface Data {
   id: string;
   name: string;
-  logo: string;
+  logo: React.ReactNode | string;
   amount: string;
   isNegative: boolean;
   date: string;

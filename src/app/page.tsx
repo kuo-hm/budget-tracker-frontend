@@ -4,53 +4,54 @@ import KPICard from "../components/ui/card/kpi-card";
 import SpendingReport from "../components/ui/chart/line-chart";
 import Table from "../components/ui/table/table";
 import { motion } from "framer-motion";
+import { FaSpotify, FaBriefcase, FaAmazon, FaCoffee, FaLaptop, FaFilm } from "react-icons/fa";
 
 const allTransactions = [
   {
     id: "#7890328",
     name: "Spotify",
-    logo: "spotify",
-    amount: "-Rp 13.000",
+    logo: <FaSpotify />,
+    amount: "13.000 Dh",
     isNegative: true,
     date: "16 Jan 2:30pm",
   },
   {
-    id: "#3948509",
+    id: "#3948509", 
     name: "Starbucks",
-    logo: "starbucks",
-    amount: "-Rp 24.000",
+    logo: <FaCoffee />,
+    amount: "24.000 Dh",
     isNegative: true,
     date: "15 Jan 3:30pm",
   },
   {
     id: "#2980298",
     name: "Upwork",
-    logo: "upwork",
-    amount: "+Rp 50.000",
+    logo: <FaLaptop />,
+    amount: " 50.000 Dh",
     isNegative: false,
     date: "14 Jan 2:30pm",
   },
   {
     id: "#4562137",
     name: "Netflix",
-    logo: "spotify",
-    amount: "-Rp 45.000",
+    logo: <FaFilm />,
+    amount: "45.000 Dh",
     isNegative: true,
     date: "13 Jan 1:45pm",
   },
   {
     id: "#7812309",
     name: "Freelance",
-    logo: "upwork",
-    amount: "+Rp 120.000",
+    logo: <FaBriefcase />,
+    amount: "120.000 Dh",
     isNegative: false,
     date: "12 Jan 5:30pm",
   },
   {
     id: "#2346721",
     name: "Amazon",
-    logo: "starbucks",
-    amount: "-Rp 67.000",
+    logo: <FaAmazon />,
+    amount: "67.000 Dh",
     isNegative: true,
     date: "11 Jan 10:15am",
   },
