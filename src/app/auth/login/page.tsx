@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { authService } from "@/api/auth";
 import { motion } from "framer-motion";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import { FormInput } from "@/components/auth/FormInput";
 import { loginSchema } from "@/lib/validators/auth";
 import { useRouter } from "next/navigation";
@@ -148,14 +148,13 @@ const LoginPage = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-zinc-100 text-zinc-900 rounded-lg font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-zinc-100 text-zinc-900 rounded-lg font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 border-2 border-zinc-900 border-t-transparent rounded-full mx-auto"
-                />
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span>Logging in...</span>
+                </>
               ) : (
                 "Login"
               )}
