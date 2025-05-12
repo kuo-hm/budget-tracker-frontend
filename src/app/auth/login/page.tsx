@@ -9,6 +9,7 @@ import { FormInput } from "@/components/auth/FormInput";
 import { loginSchema } from "@/lib/validators/auth";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import Cookies from 'js-cookie';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const LoginPage = () => {
       }
 
       if (response.data?.token) {
-        localStorage.setItem("Authorization", response.data.token);
+        Cookies.set("Authorization", response.data.token);
         // Invalidate and refetch user data
         await queryClient.invalidateQueries({ queryKey: ["user"] });
         router.push("/");
