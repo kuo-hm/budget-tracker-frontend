@@ -59,7 +59,6 @@ export function TransactionCard({
           transaction.type === "INCOME" ? "text-green-400" : "text-red-400"
         }`}
       >
-        {transaction.type === "INCOME" ? "+" : "-"}$
         {transaction.amount.toFixed(2)}
       </div>
     </div>
