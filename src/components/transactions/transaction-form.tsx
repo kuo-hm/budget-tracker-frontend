@@ -35,7 +35,7 @@ export function TransactionForm({
     categories,
     isLoading: isLoadingCategories,
     error: categoriesError,
-  } = useCategories(formData.type);
+  } = useCategories();
 
   useEffect(() => {
     if (transaction) {
