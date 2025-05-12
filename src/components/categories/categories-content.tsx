@@ -7,6 +7,7 @@ import CategoryList from "@/components/categories/category-list";
 import CategoryForm from "@/components/categories/category-form";
 import { Category } from "@/app/categories/page";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function CategoriesContent() {
   const queryClient = useQueryClient();
@@ -32,6 +33,10 @@ export default function CategoriesContent() {
 
   const handleFormSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ["categories"] });
+    toast.success("Successfully added category!", {
+      description: "Category added successfully!",
+      duration: 3000,
+    });
     handleFormClose();
   };
 

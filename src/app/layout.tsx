@@ -5,6 +5,7 @@ import { Providers } from "../providers";
 import { AuthProvider } from "@/providers/auth-provider";
 import Sidebar from "@/components/layout/sidebar";
 import { AuthCheck } from "@/components/auth/auth-check";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
             <Sidebar>{children}</Sidebar>
           </AuthProvider>
         </Providers>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

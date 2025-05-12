@@ -51,9 +51,11 @@ export default function TransactionsContent() {
 
   const handleFormSubmit = (data: TransactionCreatePayload) => {
     if (selectedTransaction) {
-      updateTransaction({ id: selectedTransaction.id, data });
+      updateTransaction({ id: selectedTransaction.id, data })
+      
     } else {
       createTransaction(data);
+  
     }
   };
 

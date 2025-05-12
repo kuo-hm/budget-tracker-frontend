@@ -8,6 +8,7 @@ import { registerSchema } from "@/lib/validators/auth";
 import { authService } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -67,8 +68,11 @@ export default function RegisterForm() {
         return;
       }
 
-      
-      router.push("/dashboard"); 
+      toast.success("Successfully registered!", {
+        description: "Welcome to the app!",
+        duration: 3000,
+      });
+      router.push("/auth/login"); 
     } catch (err) {
       if (err instanceof z.ZodError) {
         const fieldErrors = err.flatten().fieldErrors;
@@ -79,9 +83,14 @@ export default function RegisterForm() {
           password: fieldErrors.password?.[0] || "",
           confirmPassword: fieldErrors.confirmPassword?.[0] || "",
         });
+        
       } else {
         console.error("Registration failed:", err);
         setApiError("An unexpected error occurred");
+        toast.error("An unexpected error occurred", {
+          description: "Please try again later",
+          duration: 3000,
+        });
       }
     } finally {
       setIsLoading(false);

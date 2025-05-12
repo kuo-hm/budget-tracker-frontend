@@ -10,6 +10,7 @@ import { loginSchema } from "@/lib/validators/auth";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import Cookies from 'js-cookie';
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -45,8 +46,11 @@ const LoginPage = () => {
 
       if (response.data?.token) {
         Cookies.set("Authorization", response.data.token);
-        // Invalidate and refetch user data
         await queryClient.invalidateQueries({ queryKey: ["user"] });
+        toast.success("Successfully logged in!", {
+          description: "Welcome back!",
+          duration: 3000,
+        });
         router.push("/");
       }
     } catch (err) {
@@ -56,8 +60,16 @@ const LoginPage = () => {
           email: fieldErrors.email?.[0] || "",
           password: fieldErrors.password?.[0] || "",
         });
+        toast.error("Invalid email or password", {
+          description: "Please try again",
+          duration: 3000,
+        });
       } else {
         console.error("Login failed:", err);
+        toast.error("An unexpected error occurred", {
+          description: "Please try again later",
+          duration: 3000,
+        });
         setApiError("An unexpected error occurred");
       }
     } finally {
