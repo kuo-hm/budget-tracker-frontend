@@ -52,7 +52,16 @@ export function TransactionForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(
+      {
+        name: formData.name,
+        description: formData.description,
+        amount: formData.type === "EXPENSE" ? (formData.amount*-1) : formData.amount,
+        type: formData.type,
+        date: formData.date,
+        categoryId: formData.categoryId,
+      }
+    );
   };
 
   return (
@@ -105,6 +114,7 @@ export function TransactionForm({
               id="amount"
               type="number"
               step="0.01"
+              min="0"
               value={formData.amount}
               onChange={(e) =>
                 setFormData({
