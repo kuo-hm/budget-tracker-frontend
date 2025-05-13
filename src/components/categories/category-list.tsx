@@ -5,6 +5,7 @@ import { Edit2, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Category, CategoryType } from "@/app/categories/page";
 import { categoriesApi, type GetCategoriesParams } from "@/api/categories";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 interface CategoryListProps {
   onEdit: (category: Category) => void;
@@ -12,20 +13,19 @@ interface CategoryListProps {
 
 const ITEMS_PER_PAGE = 10;
 
-const CategoryList = ({ onEdit }: CategoryListProps) => {
+function CategoryListContent({ onEdit }: CategoryListProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  
   const currentPage = Number(searchParams.get("page")) || 1;
   const sortBy = searchParams.get("sortBy") || "name";
   const orderBy = (searchParams.get("orderBy") as "asc" | "desc") || "asc";
   const selectedType = (searchParams.get("type") as CategoryType) || "";
   const searchKeyword = searchParams.get("keyword") || "";
 
-  const { data, isLoading, error } = useQuery({
+  const { data, error } = useQuery({
     queryKey: [
       "categories",
       currentPage,
@@ -128,14 +128,6 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
     "INVESTMENT",
     "DEBT",
   ];
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -261,6 +253,18 @@ const CategoryList = ({ onEdit }: CategoryListProps) => {
       )}
     </div>
   );
-};
+}
 
-export default CategoryList;
+export function CategoryList(props: CategoryListProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        </div>
+      }
+    >
+      <CategoryListContent {...props} />
+    </Suspense>
+  );
+}

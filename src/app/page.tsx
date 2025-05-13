@@ -4,7 +4,14 @@ import KPICard from "../components/ui/card/kpi-card";
 import SpendingReport from "../components/ui/chart/line-chart";
 import Table from "../components/ui/table/table";
 import { motion } from "framer-motion";
-import { FaSpotify, FaBriefcase, FaAmazon, FaCoffee, FaLaptop, FaFilm } from "react-icons/fa";
+import {
+  FaSpotify,
+  FaBriefcase,
+  FaAmazon,
+  FaCoffee,
+  FaLaptop,
+  FaFilm,
+} from "react-icons/fa";
 
 const allTransactions = [
   {
@@ -16,7 +23,7 @@ const allTransactions = [
     date: "16 Jan 2:30pm",
   },
   {
-    id: "#3948509", 
+    id: "#3948509",
     name: "Starbucks",
     logo: <FaCoffee />,
     amount: "24.000 Dh",
@@ -73,12 +80,12 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-zinc-950 p-6 min-h-screen">
-      <motion.div 
+    <div className="bg-zinc-950 p-4 sm:p-6 min-h-screen">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-full mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-5"
+        className="max-w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 sm:mb-5"
       >
         <KPICard title="Total Money" value="100.000 MAD" />
         <KPICard
@@ -94,29 +101,33 @@ export default function Home() {
         <KPICard title="Goal" value="100.000 MAD" />
       </motion.div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mb-5 bg-zinc-900 rounded-2xl shadow-xl p-6 border border-zinc-800"
+        className="mb-4 sm:mb-5 bg-zinc-900 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 border border-zinc-800 overflow-x-auto"
       >
-        <SpendingReport />
+        <div className="min-w-[600px]">
+          <SpendingReport />
+        </div>
       </motion.div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="mb-5 bg-zinc-900 rounded-2xl shadow-xl p-6 border border-zinc-800"
+        className="mb-4 sm:mb-5 bg-zinc-900 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 border border-zinc-800 overflow-x-auto"
       >
-        <Table
-          data={allTransactions}
-          totalPages={4}
-          currentPage={currentPage}
-          nextPage={nextPage}
-          prevPage={prevPage}
-          goToPage={goToPage}
-        />
+        <div className="min-w-[600px]">
+          <Table
+            data={allTransactions}
+            totalPages={4}
+            currentPage={currentPage}
+            nextPage={nextPage}
+            prevPage={prevPage}
+            goToPage={goToPage}
+          />
+        </div>
       </motion.div>
     </div>
   );

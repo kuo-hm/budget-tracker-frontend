@@ -2,7 +2,6 @@
 
 import { LoginInput, RegisterInput } from "@/lib/validators/auth";
 import { authApi as axiosAuthApi } from "./index";
-import Cookies from 'js-cookie';
 
 export interface LoginDto {
   email: string;
@@ -16,7 +15,6 @@ export interface RegisterDto {
 }
 
 export interface AuthResponse {
-  token: string;
   user: {
     id: string;
     email: string;
@@ -35,13 +33,6 @@ export const authService = {
   login: async (credentials: LoginInput): Promise<ApiResponse<AuthResponse>> => {
     try {
       const { data } = await axiosAuthApi.post("/auth/login", credentials);
-      if (data.token) {
-        Cookies.set('Authorization', data.token, { 
-          expires: 7, // 7 days
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict'
-        });
-      }
       return { data };
     } catch (error) {
       console.error("Login error:", error);
@@ -59,6 +50,7 @@ export const authService = {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
+        credentials: 'include', // Important for cookies
       });
 
       const result = await response.json();
@@ -81,11 +73,24 @@ export const authService = {
     }
   },
 
+  refreshToken: async (): Promise<ApiResponse<{ accessToken: string }>> => {
+    try {
+      const { data } = await axiosAuthApi.post("/auth/refresh");
+      return { data };
+    } catch (error) {
+      console.error("Refresh token error:", error);
+      return {
+        error: "Failed to refresh token"
+      };
+    }
+  },
+
   logout: async (): Promise<void> => {
     try {
-      await axiosAuthApi.post("/auth/logout");
+      await axiosAuthApi.post("/auth/logout", {}, {
+        withCredentials: true
+      });
     } finally {
-      Cookies.remove('Authorization');
       window.location.href = "/auth/login";
     }
   },

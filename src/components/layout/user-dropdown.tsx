@@ -71,7 +71,9 @@ export function UserDropdown({ isCollapsed }: UserDropdownProps) {
         <div
           className={`absolute ${
             isCollapsed ? "left-0" : "bottom-full left-0 mb-2"
-          } w-full bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg overflow-hidden`}
+          } w-full bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg overflow-hidden z-50
+          md:absolute md:bottom-full md:left-0 md:mb-2
+          sm:fixed sm:bottom-0 sm:left-0 sm:right-0 sm:mb-0 sm:rounded-none sm:border-t sm:border-x-0`}
         >
           <div className="p-2 border-b border-zinc-800">
             <div className="text-sm font-medium text-zinc-100">
@@ -79,27 +81,29 @@ export function UserDropdown({ isCollapsed }: UserDropdownProps) {
             </div>
             <div className="text-xs text-zinc-400">{user?.email}</div>
           </div>
-          <button
-            onClick={handleProfileClick}
-            className="flex items-center gap-2 w-full p-2 text-sm text-zinc-100 hover:bg-zinc-800 transition-colors"
-          >
-            <User size={16} />
-            Profile
-          </button>
-          <button
-            onClick={handleSettingsClick}
-            className="flex items-center gap-2 w-full p-2 text-sm text-zinc-100 hover:bg-zinc-800 transition-colors"
-          >
-            <Settings size={16} />
-            Settings
-          </button>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 w-full p-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors"
-          >
-            <LogOut size={16} />
-            Logout
-          </button>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-1 p-1">
+            <button
+              onClick={handleProfileClick}
+              className="flex flex-col items-center gap-1 p-2 text-sm text-zinc-100 hover:bg-zinc-800 transition-colors rounded-lg"
+            >
+              <User size={20} />
+              <span className="text-xs">Profile</span>
+            </button>
+            <button
+              onClick={handleSettingsClick}
+              className="flex flex-col items-center gap-1 p-2 text-sm text-zinc-100 hover:bg-zinc-800 transition-colors rounded-lg"
+            >
+              <Settings size={20} />
+              <span className="text-xs">Settings</span>
+            </button>
+            <button
+              onClick={logout}
+              className="flex flex-col items-center gap-1 p-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors rounded-lg"
+            >
+              <LogOut size={20} />
+              <span className="text-xs">Logout</span>
+            </button>
+          </div>
         </div>
       )}
     </div>

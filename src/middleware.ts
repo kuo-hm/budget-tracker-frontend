@@ -2,18 +2,26 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('Authorization')?.value
+  const hasAccessToken = request.cookies.has('accessToken')
+  const hasRefreshToken = request.cookies.has('refreshToken')
   const isAuthPage = request.nextUrl.pathname.startsWith('/auth')
+  const isApiRoute = request.nextUrl.pathname.startsWith('/api')
 
-  console.log(request.nextUrl.pathname);
-  if (isAuthPage && token) {
-    console.log(isAuthPage,"redirecting to home")
+  // Allow API routes to handle their own authentication
+  if (isApiRoute) {
+    return NextResponse.next()
+  }
+
+  // If on auth page and has tokens, redirect to home
+  if (isAuthPage && (hasAccessToken || hasRefreshToken)) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
-  if (!isAuthPage && !token) {
-    console.log("redirecting to login",isAuthPage)
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+  // If not on auth page and no tokens, redirect to login
+  if (!isAuthPage && !hasAccessToken && !hasRefreshToken) {
+    const loginUrl = new URL('/auth/login', request.url)
+    loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+    return NextResponse.redirect(loginUrl)
   }
 
   return NextResponse.next()
@@ -23,11 +31,10 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 } 

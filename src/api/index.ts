@@ -1,8 +1,7 @@
 import axios from "axios";
-import Cookies from 'js-cookie';
+import { authService } from "./auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 
 export const authApi = axios.create({
   baseURL: API_URL,
@@ -10,8 +9,8 @@ export const authApi = axios.create({
     "Content-Type": "application/json",
     "Accept": "application/json",
   },
+  withCredentials: true,
 });
-
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -19,40 +18,62 @@ export const api = axios.create({
     "Content-Type": "application/json",
     "Accept": "application/json",
   },
+  withCredentials: true,
 });
 
-
 if (typeof window !== "undefined") {
-  
-  api.interceptors.request.use(
-    (config) => {
-      try {
-        const token = Cookies.get("Authorization");
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-      } catch (error) {
-        console.warn("Failed to access cookie:", error);
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+  let isRefreshing = false;
+  let failedQueue: Array<{
+    resolve: (value: string) => void;
+    reject: (reason: unknown) => void;
+  }> = [];
 
-  
+  const processQueue = (error: unknown = null, token: string | null = null) => {
+    failedQueue.forEach(prom => {
+      if (error) {
+        prom.reject(error);
+      } else {
+        prom.resolve(token!);
+      }
+    });
+    failedQueue = [];
+  };
+
   api.interceptors.response.use(
     (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
+    async (error) => {
+      const originalRequest = error.config;
+
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          })
+            .then((token) => {
+              originalRequest.headers["Authorization"] = `Bearer ${token}`;
+              return api(originalRequest);
+            })
+            .catch((err) => Promise.reject(err));
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
         try {
-          Cookies.remove("Authorization");
+          const response = await authService.refreshToken();
+          if (response.data?.accessToken) {
+            processQueue(null, response.data.accessToken);
+            return api(originalRequest);
+          }
+        } catch (refreshError) {
+          processQueue(refreshError, null);
           window.location.href = "/auth/login";
-        } catch (error) {
-          console.warn("Failed to remove cookie:", error);
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
         }
       }
+
       return Promise.reject(error);
     }
   );

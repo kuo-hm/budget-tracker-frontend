@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
-import CategoryList from "@/components/categories/category-list";
+import { CategoryList } from "@/components/categories/category-list";
 import CategoryForm from "@/components/categories/category-form";
 import { Category } from "@/app/categories/page";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ export default function CategoriesContent() {
   const queryClient = useQueryClient();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
+    null,
   );
 
   const handleAddClick = () => {

@@ -4,7 +4,6 @@ import "./assets/css/globals.css";
 import { Providers } from "../providers";
 import { AuthProvider } from "@/providers/auth-provider";
 import Sidebar from "@/components/layout/sidebar";
-import { AuthCheck } from "@/components/auth/auth-check";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -32,7 +31,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950`}
       >
-        <AuthCheck />
         <Providers>
           <AuthProvider>
             <Sidebar>{children}</Sidebar>

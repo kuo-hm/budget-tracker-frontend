@@ -35,7 +35,7 @@ export default function RegisterForm() {
       ...prev,
       [name]: value,
     }));
-    
+
     if (errors[name as keyof typeof errors]) {
       setErrors((prev) => ({
         ...prev,
@@ -72,7 +72,7 @@ export default function RegisterForm() {
         description: "Welcome to the app!",
         duration: 3000,
       });
-      router.push("/auth/login"); 
+      router.push("/auth/login");
     } catch (err) {
       if (err instanceof z.ZodError) {
         const fieldErrors = err.flatten().fieldErrors;
@@ -83,7 +83,6 @@ export default function RegisterForm() {
           password: fieldErrors.password?.[0] || "",
           confirmPassword: fieldErrors.confirmPassword?.[0] || "",
         });
-        
       } else {
         console.error("Registration failed:", err);
         setApiError("An unexpected error occurred");
@@ -112,7 +111,9 @@ export default function RegisterForm() {
             transition={{ delay: 0.2 }}
             className="text-center"
           >
-            <h2 className="text-4xl font-bold text-zinc-100 mb-2">Create Account</h2>
+            <h2 className="text-4xl font-bold text-zinc-100 mb-2">
+              Create Account
+            </h2>
             <p className="text-zinc-400">Sign up to get started</p>
           </motion.div>
 
@@ -228,4 +229,4 @@ export default function RegisterForm() {
       </motion.div>
     </div>
   );
-} 
+}
