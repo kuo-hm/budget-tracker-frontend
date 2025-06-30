@@ -22,6 +22,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Transactions", href: "/transactions", icon: Wallet },
   { name: "Categories", href: "/categories", icon: PieChart },
+  { name: "Goals", href: "/goals", icon: PieChart },
 ];
 
 export default function Sidebar({ children }: SidebarProps) {

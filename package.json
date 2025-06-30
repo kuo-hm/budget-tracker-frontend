@@ -8,11 +8,11 @@
     "start": "next start",
     "lint": "next lint --fix",
     "prod": "pm2 start npm --name \"budget-tracker\" -- start",
-    "deploy": "npm run build && pm2 start npm --name \"budget-tracker-frontend\" -- start",
-    "prepare": "husky"
+    "deploy": "npm run build && pm2 start npm --name \"budget-tracker-frontend\" -- start"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
+    "@radix-ui/react-switch": "^1.2.5",
     "@tanstack/react-query": "^5.75.7",
     "@types/js-cookie": "^3.0.6",
     "axios": "^1.6.7",
@@ -45,7 +45,6 @@
     "autoprefixer": "^10.4.17",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
-    "husky": "^9.1.7",
     "lint-staged": "^16.0.0",
     "postcss": "^8.4.35",
     "prettier": "^3.5.3",
